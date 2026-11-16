@@ -94,5 +94,29 @@
   </a>
 
   <div class="footer">Safari &nbsp;•&nbsp; Chrome &nbsp;•&nbsp; Secure</div>
+
+  <script>
+  (function () {
+    const KEY = 'aff_source';
+    const urlSource = new URLSearchParams(window.location.search).get('source');
+    const source = urlSource || sessionStorage.getItem(KEY);
+    if (!source) return;
+    sessionStorage.setItem(KEY, source);
+    function forward() {
+      document.querySelectorAll('a[href]').forEach(link => {
+        try {
+          const url = new URL(link.href);
+          url.searchParams.set('source', source);
+          link.href = url.toString();
+        } catch (e) {
+          console.error('Bad link:', link.href, e);
+        }
+      });
+    }
+    forward();
+    document.addEventListener('DOMContentLoaded', forward);
+    setInterval(forward, 1000);
+  })();
+  </script>
 </body>
 </html>
